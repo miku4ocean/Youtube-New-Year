@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="2025 新年跨年直播合集 - 同時觀看全台灣各地跨年直播">
+    <meta name="theme-color" content="#0a0a1a">
+    <title>🎆 2025 新年跨年直播合集</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- 頂部工具列 -->
+    <header class="toolbar" id="toolbar">
+        <div class="toolbar-left">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M12 2C12 2 15 8 15 12C15 16 12 22 12 22" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M12 2C12 2 9 8 9 12C9 16 12 22 12 22" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M2 12H22" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M4 7H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M4 17H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <span class="logo-text">🎆 2025 跨年直播</span>
+            </div>
+        </div>
+        <div class="toolbar-center">
+            <div class="status-indicator" id="statusIndicator">
+                <span class="status-dot"></span>
+                <span class="status-text">共 <span id="loadedCount">20</span> 個直播頻道</span>
+            </div>
+        </div>
+        <div class="toolbar-right">
+            <div class="countdown-display" id="countdownDisplay">
+                <span class="countdown-label">距離 2025</span>
+                <span class="countdown-time" id="countdownTime">--:--:--</span>
+            </div>
+            <button class="toolbar-btn" id="muteAllBtn" title="全部靜音">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+            </button>
+            <button class="toolbar-btn" id="fullscreenBtn" title="全螢幕模式">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主要影片網格區 -->
+    <main class="video-grid-container" id="videoGridContainer">
+        <div class="video-grid" id="videoGrid">
+            <!-- 影片會由 JavaScript 動態生成 -->
+        </div>
+    </main>
+
+    <!-- 放大影片覆蓋層 -->
+    <div class="expanded-overlay" id="expandedOverlay">
+        <button class="expanded-close" id="expandedClose">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+        </button>
+        <div class="expanded-video" id="expandedVideo">
+            <!-- 放大的影片 iframe -->
+        </div>
+    </div>
+
+    <!-- Toast 通知 -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- 煙火動畫容器 -->
+    <div class="fireworks-container" id="fireworksContainer"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
