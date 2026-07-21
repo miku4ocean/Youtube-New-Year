@@ -1,5 +1,5 @@
 /**
- * 2025 新年跨年直播合集
+ * 新年跨年直播合集
  * 同時觀看多個跨年直播頻道
  */
 
@@ -54,6 +54,7 @@ class NewYearLivestreams {
         this.loadedCount = document.getElementById('loadedCount');
         this.toastContainer = document.getElementById('toastContainer');
         this.countdownTime = document.getElementById('countdownTime');
+        this.countdownLabel = document.getElementById('countdownLabel');
         this.countdownDisplay = document.getElementById('countdownDisplay');
         this.fireworksContainer = document.getElementById('fireworksContainer');
     }
@@ -207,6 +208,10 @@ class NewYearLivestreams {
         const updateCountdown = () => {
             const now = new Date();
             const newYear = new Date(now.getFullYear() + 1, 0, 1, 0, 0, 0);
+
+            if (this.countdownLabel) {
+                this.countdownLabel.textContent = `距離 ${newYear.getFullYear()}`;
+            }
 
             // 如果已經過了今年的新年，計算到明年
             if (now.getMonth() === 0 && now.getDate() === 1 && now.getHours() < 1) {
