@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Youtube-New-Year — 架構圖</title>
+<style>
+:root{
+  --paper:#FBFAF7; --ink:#181B20; --muted:#6B7178;
+  --line:#E7E3DA; --accent:#2E4B8F; --accent-soft:#EAEEF7;
+  --ok:#1F7A54; --err:#B03A2E; --warn:#B8860B;
+  --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;
+  --sans:ui-sans-serif,system-ui,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,monospace;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--sans); line-height:1.6;
+}
+.wrap{max-width:1100px; margin:0 auto; padding:48px 24px 80px;}
+.wordmark{font-family:var(--serif); font-size:34px; margin:0;}
+.wordmark .dot{color:var(--accent);}
+.subtitle{font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-top:6px;}
+hr{border:none; border-top:1px solid var(--line); margin:24px 0 32px;}
+h2.section{
+  font-family:var(--mono); font-size:13px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); margin:40px 0 12px;
+}
+.svg-card{
+  background:var(--paper); border:1px solid var(--line); border-radius:10px;
+  padding:16px; overflow-x:auto;
+}
+.svg-card svg{width:100%; height:auto; min-width:760px; display:block;}
+.buildlog{
+  background:var(--paper); border:1px solid var(--line); border-radius:10px;
+  padding:20px 24px; font-family:var(--mono); font-size:13px;
+}
+.buildlog .row{display:flex; gap:10px; padding:4px 0; align-items:flex-start;}
+.buildlog .mark{width:1.2em; flex:none;}
+.buildlog .mark.ok{color:var(--ok);}
+.buildlog .mark.doing{color:var(--accent);}
+.buildlog .mark.err{color:var(--err);}
+.buildlog .txt{color:var(--ink);}
+.buildlog .txt .dim{color:var(--muted);}
+.keystone-note{
+  margin-top:28px; border:1.5px solid var(--accent); background:var(--accent-soft);
+  border-radius:10px; padding:18px 22px;
+}
+.keystone-note .tag{font-family:var(--mono); font-size:12px; letter-spacing:.1em; color:var(--accent); text-transform:uppercase;}
+.keystone-note p{margin:8px 0 0; font-size:14px;}
+footer{margin-top:48px; font-family:var(--mono); font-size:11px; color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="wordmark">Youtube-New-Year<span class="dot">.</span></h1>
+  <div class="subtitle">架構圖 · 交付物一 · 2026-07-25</div>
+  <hr>
+
+  <h2 class="section">說明</h2>
+  <p>本專案為純靜態前端工具（HTML／CSS／原生 JavaScript），無 build 步驟、無套件依賴、無伺服器端程式碼。
+  下圖依實際讀取的 <code>index.html</code>、<code>app.js</code>、<code>styles.css</code>、<code>HANDOFF.md</code> 產出，
+  依專案真實情況將層次縮為五層（無 API 層、無基礎設施層、無 Worker 流水線——因為本工具沒有這些），
+  並將全案最關鍵的設計決定（20 支直播網址為寫死於程式碼的年度人工維護資料）做成 accent 色視覺焦點。</p>
+
+  <h2 class="section">架構圖</h2>
+  <div class="svg-card">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 850" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, 'Noto Sans TC', sans-serif">
+  <defs>
+    <style>
+      .paper { fill: #FBFAF7; }
+      .ink { fill: #181B20; }
+      .muted { fill: #6B7178; }
+      .line { stroke: #E7E3DA; }
+      .accent { fill: #2E4B8F; }
+      .accent-stroke { stroke: #2E4B8F; }
+      .accent-soft { fill: #EAEEF7; }
+      .card { fill: #FBFAF7; stroke: #E7E3DA; stroke-width: 1; }
+      .serif { font-family: "Iowan Old Style", Georgia, "Times New Roman", serif; }
+      .mono { font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace; }
+      .sectiontitle { font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace; font-size: 13px; letter-spacing: 0.1em; fill: #6B7178; text-transform: uppercase; }
+      .boxlabel { font-size: 15px; font-weight: 600; fill: #181B20; }
+      .boxdesc { font-size: 12.5px; fill: #6B7178; }
+      .arrow { stroke: #6B7178; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead2); }
+    </style>
+    <marker id="arrowhead2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#6B7178" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="850" class="paper" />
+
+  <text x="40" y="55" class="serif ink" font-size="30">Youtube-New-Year<tspan fill="#2E4B8F">.</tspan></text>
+  <text x="40" y="80" class="mono muted" font-size="12" letter-spacing="0.05em">架構圖 — 純靜態前端工具（無後端／無資料庫／無 WORKER／無 API 金鑰）</text>
+  <line x1="40" y1="96" x2="1040" y2="96" class="line" stroke-width="1" />
+
+  <text x="40" y="130" class="sectiontitle">01 · 使用者／瀏覽器</text>
+  <rect x="40" y="140" width="1000" height="60" rx="9" class="card" />
+  <text x="60" y="167" class="boxlabel">使用者開啟 index.html（單頁）</text>
+  <text x="60" y="186" class="boxdesc">桌機每列4個／平板每列3個／手機每列2個／極小螢幕每列1個（RWD Grid，來源：styles.css）</text>
+  <path d="M540,200 L540,222" class="arrow" />
+
+  <text x="40" y="252" class="sectiontitle">02 · UI 骨架層</text>
+  <rect x="40" y="262" width="480" height="76" rx="9" class="card" />
+  <text x="60" y="290" class="boxlabel">index.html</text>
+  <text x="60" y="309" class="boxdesc">工具列／影片格線／放大覆蓋層／</text>
+  <text x="60" y="325" class="boxdesc">Toast 容器／煙火容器</text>
+
+  <rect x="560" y="262" width="480" height="76" rx="9" class="card" />
+  <text x="580" y="290" class="boxlabel">styles.css</text>
+  <text x="580" y="309" class="boxdesc">深色跨年主題（金／紅點綴）、</text>
+  <text x="580" y="325" class="boxdesc">RWD Grid、放大／Toast／煙火動畫樣式</text>
+  <path d="M540,338 L540,360" class="arrow" />
+
+  <text x="40" y="390" class="sectiontitle">03 · 應用邏輯層 — app.js：class NewYearLivestreams</text>
+  <rect x="40" y="400" width="235" height="86" rx="9" class="card" />
+  <text x="55" y="426" class="boxlabel" font-size="13">renderVideoGrid()</text>
+  <text x="55" y="444" class="boxdesc">extractVideoId()</text>
+  <text x="55" y="460" class="boxdesc">getEmbedUrl()</text>
+
+  <rect x="285" y="400" width="235" height="86" rx="9" class="card" />
+  <text x="300" y="426" class="boxlabel" font-size="13">startCountdown()</text>
+  <text x="300" y="444" class="boxdesc">距離下一年 1/1</text>
+  <text x="300" y="460" class="boxdesc">00:00 動態倒數</text>
+
+  <rect x="530" y="400" width="245" height="86" rx="9" class="card" />
+  <text x="545" y="426" class="boxlabel" font-size="13">toggleMuteAll()／toggleFullscreen()</text>
+  <text x="545" y="444" class="boxdesc">expandVideo()</text>
+  <text x="545" y="460" class="boxdesc">handleKeydown()（M／F／ESC）</text>
+
+  <rect x="785" y="400" width="255" height="86" rx="9" class="card" />
+  <text x="800" y="426" class="boxlabel" font-size="13">triggerFireworks()</text>
+  <text x="800" y="444" class="boxdesc">新年時刻煙火粒子動畫</text>
+  <text x="800" y="460" class="boxdesc">（CSS keyframes 動態插入）</text>
+  <path d="M540,486 L540,508" class="arrow" />
+
+  <text x="40" y="538" class="sectiontitle">04 · 瀏覽器原生 API（無後端／無資料庫）</text>
+  <rect x="40" y="548" width="235" height="60" rx="9" class="card" />
+  <text x="55" y="574" class="boxlabel" font-size="13">Fullscreen API</text>
+  <text x="55" y="592" class="boxdesc">requestFullscreen/exitFullscreen</text>
+
+  <rect x="285" y="548" width="235" height="60" rx="9" class="card" />
+  <text x="300" y="574" class="boxlabel" font-size="13">setInterval 計時器</text>
+  <text x="300" y="592" class="boxdesc">倒數／煙火節奏控制</text>
+
+  <rect x="530" y="548" width="245" height="60" rx="9" class="card" />
+  <text x="545" y="574" class="boxlabel" font-size="13">DOM Events</text>
+  <text x="545" y="592" class="boxdesc">click／keydown／fullscreenchange</text>
+
+  <rect x="785" y="548" width="255" height="60" rx="9" stroke-dasharray="4 3" class="card" />
+  <text x="800" y="574" class="boxdesc" font-style="italic">已確認：無 localStorage／</text>
+  <text x="800" y="592" class="boxdesc" font-style="italic">sessionStorage／fetch 呼叫</text>
+  <path d="M540,608 L540,630" class="arrow" />
+
+  <text x="40" y="660" class="sectiontitle">05 · 外部依賴與資料來源</text>
+
+  <rect x="40" y="670" width="460" height="90" rx="9" class="card" />
+  <text x="60" y="698" class="boxlabel">YouTube iframe 內嵌播放</text>
+  <text x="60" y="718" class="boxdesc">youtube.com/embed/{videoId}</text>
+  <text x="60" y="736" class="boxdesc">非 YouTube Data API，不需 API 金鑰／配額</text>
+  <text x="60" y="752" class="boxdesc">（grep 確認：無硬編碼金鑰）</text>
+
+  <rect x="520" y="662" width="520" height="106" rx="10" class="accent-soft accent-stroke" stroke-width="3" />
+  <text x="540" y="686" class="mono" font-size="12" letter-spacing="0.08em" fill="#2E4B8F">★ KEYSTONE — 最關鍵的設計決定</text>
+  <text x="540" y="708" class="boxlabel" font-size="14">videoUrls 陣列（app.js 第9~30行）</text>
+  <text x="540" y="726" class="boxdesc">20 個跨年直播網址，寫死於程式碼中；</text>
+  <text x="540" y="742" class="boxdesc">為年度人工維護資料，須每年跨年前</text>
+  <text x="540" y="758" class="boxdesc">由接手者手動替換為當年度直播網址</text>
+
+  <path d="M157,486 L157,548" class="arrow" />
+  <path d="M402,486 L402,548" class="arrow" />
+  <path d="M652,486 L652,548" class="arrow" />
+  <path d="M912,486 L912,548" class="arrow" />
+
+  <path d="M157,608 L157,670" class="arrow" />
+  <path d="M270,610 C270,635 400,635 400,662" class="arrow" />
+  <path d="M700,608 C700,635 700,650 750,662" class="arrow" />
+
+  <line x1="40" y1="790" x2="1040" y2="790" class="line" stroke-width="1" />
+  <text x="40" y="812" class="mono muted" font-size="11" letter-spacing="0.05em">內容依 2026-07-25 實際讀取 index.html / app.js / styles.css / HANDOFF.md 產出；查無之處已標「未確認」，未臆造。</text>
+  <text x="40" y="830" class="mono muted" font-size="11" letter-spacing="0.05em">本工具無 API 層／無基礎設施層／無 Worker 流水線——純靜態五層結構已誠實反映實際架構（無空層）。</text>
+</svg>
+  </div>
+
+  <h2 class="section">Build Log · 架構確認紀錄</h2>
+  <div class="buildlog">
+    <div class="row"><span class="mark ok">✓</span><span class="txt">index.html 讀取完畢——單頁結構，含工具列／影片格線／放大覆蓋層／Toast／煙火容器 <span class="dim">（共 88 行）</span></span></div>
+    <div class="row"><span class="mark ok">✓</span><span class="txt">app.js 讀取完畢——單一 class NewYearLivestreams，12 個 getElementById 皆與 index.html id 對應 <span class="dim">（共 335 行）</span></span></div>
+    <div class="row"><span class="mark ok">✓</span><span class="txt">styles.css 讀取完畢——RWD Grid（4/3/2/1 欄）與深色跨年主題 <span class="dim">（共 740 行）</span></span></div>
+    <div class="row"><span class="mark ok">✓</span><span class="txt">grep 確認 app.js／index.html 無 localStorage／sessionStorage／fetch／API 金鑰</span></div>
+    <div class="row"><span class="mark ok">✓</span><span class="txt">grep 確認全專案無 admin／後台／dashboard／管理 相關頁面或路由</span></div>
+    <div class="row"><span class="mark doing">▸</span><span class="txt">未確認：本次是否已部署至 GitHub Pages（HANDOFF.md 僅列為建議步驟，未見部署紀錄）</span></div>
+  </div>
+
+  <div class="keystone-note">
+    <div class="tag">Keystone</div>
+    <p><strong>videoUrls 陣列是全案唯一的「資料」——而它是寫死在程式碼裡的年度資產。</strong>
+    這個專案沒有資料庫、沒有後台可以編輯直播清單；每年跨年前，接手者必須直接編輯 <code>app.js</code>
+    開頭的 20 支網址（HANDOFF.md 明列為「接手者下一步 #1」）。這個決定讓專案維持零依賴、零後端、
+    可直接丟給 GitHub Pages 部署，但代價是「年度維護」完全仰賴人工記得更新。</p>
+  </div>
+
+  <footer>docs/architecture.html · 資料來源：index.html / app.js / styles.css / HANDOFF.md（2026-07-25 實讀）</footer>
+</div>
+</body>
+</html>

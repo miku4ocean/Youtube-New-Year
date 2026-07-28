@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup 總覽 — Youtube-New-Year</title>
+<style>
+:root{
+  --paper:#FBFAF7; --ink:#181B20; --muted:#6B7178;
+  --line:#E7E3DA; --accent:#2E4B8F; --accent-soft:#EAEEF7;
+  --ok:#1F7A54; --err:#B03A2E; --warn:#B8860B;
+  --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;
+  --sans:ui-sans-serif,system-ui,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); line-height:1.6;}
+.wrap{max-width:860px; margin:0 auto; padding:48px 24px 80px;}
+.wordmark{font-family:var(--serif); font-size:34px; margin:0;}
+.wordmark .dot{color:var(--accent);}
+.subtitle{font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-top:6px;}
+hr{border:none; border-top:1px solid var(--line); margin:24px 0 32px;}
+h2.section{font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:32px 0 12px;}
+.card-list{display:flex; flex-direction:column; gap:12px;}
+.card{
+  display:block; border:1px solid var(--line); border-radius:10px; padding:16px 20px;
+  text-decoration:none; color:var(--ink);
+}
+.card:hover{border-color:var(--accent);}
+.card .name{font-weight:600; font-size:15px;}
+.card .desc{font-size:13px; color:var(--muted); margin-top:4px;}
+.badge{display:inline-block; font-family:var(--mono); font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:var(--accent); background:var(--accent-soft); border-radius:4px; padding:2px 8px; margin-left:8px;}
+.empty-note{
+  border:1px dashed var(--line); border-radius:10px; padding:16px 20px; font-size:13px; color:var(--muted);
+}
+footer{margin-top:48px; font-family:var(--mono); font-size:11px; color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="wordmark">Youtube-New-Year<span class="dot">.</span></h1>
+  <div class="subtitle">Mockup 總覽 · 交付物二</div>
+  <hr>
+
+  <p>本專案為純靜態單頁工具（無路由、無多頁前端框架），實際只有 <code>index.html</code> 一個頁面。
+  下列為依實際頁面結構繪製的線框稿：</p>
+
+  <h2 class="section">前台頁面（1 個，來自實際 index.html）</h2>
+  <div class="card-list">
+    <a class="card" href="front-main.html">
+      <span class="name">front-main — 跨年直播主頁<span class="badge">實作</span></span>
+      <div class="desc">頂部工具列（logo／狀態／倒數／靜音／全螢幕）＋ 20 格直播格線 ＋ 放大覆蓋層／Toast／煙火三種動態狀態。</div>
+    </a>
+  </div>
+
+  <h2 class="section">後台頁面</h2>
+  <div class="empty-note">
+    本專案無後台頁面。已確認：<code>grep -rniE "admin|後台|dashboard|管理"</code> 於
+    HANDOFF.md／AGENTS.md／README.md／CLAUDE.md／app.js／index.html 皆無結果，
+    且直播網址清單的更新方式是接手者直接手動編輯 <code>app.js</code> 的 <code>videoUrls</code> 陣列，
+    並非透過任何管理介面。因此依鐵律「查不到就不編造」，此處不補一個不存在的後台頁。
+  </div>
+
+  <footer>資料來源：實讀 index.html / app.js / README.md / HANDOFF.md / AGENTS.md（2026-07-25）</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 850" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, 'Noto Sans TC', sans-serif">
+  <defs>
+    <style>
+      .paper { fill: #FBFAF7; }
+      .ink { fill: #181B20; }
+      .muted { fill: #6B7178; }
+      .line { stroke: #E7E3DA; }
+      .accent { fill: #2E4B8F; }
+      .accent-stroke { stroke: #2E4B8F; }
+      .accent-soft { fill: #EAEEF7; }
+      .card { fill: #FBFAF7; stroke: #E7E3DA; stroke-width: 1; }
+      .serif { font-family: "Iowan Old Style", Georgia, "Times New Roman", serif; }
+      .mono { font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace; }
+      .sectiontitle { font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace; font-size: 13px; letter-spacing: 0.1em; fill: #6B7178; text-transform: uppercase; }
+      .boxlabel { font-size: 15px; font-weight: 600; fill: #181B20; }
+      .boxdesc { font-size: 12.5px; fill: #6B7178; }
+      .arrow { stroke: #6B7178; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#6B7178" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="850" class="paper" />
+
+  <!-- Wordmark -->
+  <text x="40" y="55" class="serif ink" font-size="30">Youtube-New-Year<tspan fill="#2E4B8F">.</tspan></text>
+  <text x="40" y="80" class="mono muted" font-size="12" letter-spacing="0.05em">架構圖 — 純靜態前端工具（無後端／無資料庫／無 WORKER／無 API 金鑰）</text>
+  <line x1="40" y1="96" x2="1040" y2="96" class="line" stroke-width="1" />
+
+  <!-- Layer 1 -->
+  <text x="40" y="130" class="sectiontitle">01 · 使用者／瀏覽器</text>
+  <rect x="40" y="140" width="1000" height="60" rx="9" class="card" />
+  <text x="60" y="167" class="boxlabel">使用者開啟 index.html（單頁）</text>
+  <text x="60" y="186" class="boxdesc">桌機每列4個／平板每列3個／手機每列2個／極小螢幕每列1個（RWD Grid，來源：styles.css）</text>
+  <path d="M540,200 L540,222" class="arrow" />
+
+  <!-- Layer 2 -->
+  <text x="40" y="252" class="sectiontitle">02 · UI 骨架層</text>
+  <rect x="40" y="262" width="480" height="76" rx="9" class="card" />
+  <text x="60" y="290" class="boxlabel">index.html</text>
+  <text x="60" y="309" class="boxdesc">工具列／影片格線／放大覆蓋層／</text>
+  <text x="60" y="325" class="boxdesc">Toast 容器／煙火容器</text>
+
+  <rect x="560" y="262" width="480" height="76" rx="9" class="card" />
+  <text x="580" y="290" class="boxlabel">styles.css</text>
+  <text x="580" y="309" class="boxdesc">深色跨年主題（金／紅點綴）、</text>
+  <text x="580" y="325" class="boxdesc">RWD Grid、放大／Toast／煙火動畫樣式</text>
+  <path d="M540,338 L540,360" class="arrow" />
+
+  <!-- Layer 3 -->
+  <text x="40" y="390" class="sectiontitle">03 · 應用邏輯層 — app.js：class NewYearLivestreams</text>
+  <rect x="40" y="400" width="235" height="86" rx="9" class="card" />
+  <text x="55" y="426" class="boxlabel" font-size="13">renderVideoGrid()</text>
+  <text x="55" y="444" class="boxdesc">extractVideoId()</text>
+  <text x="55" y="460" class="boxdesc">getEmbedUrl()</text>
+
+  <rect x="285" y="400" width="235" height="86" rx="9" class="card" />
+  <text x="300" y="426" class="boxlabel" font-size="13">startCountdown()</text>
+  <text x="300" y="444" class="boxdesc">距離下一年 1/1</text>
+  <text x="300" y="460" class="boxdesc">00:00 動態倒數</text>
+
+  <rect x="530" y="400" width="245" height="86" rx="9" class="card" />
+  <text x="545" y="426" class="boxlabel" font-size="13">toggleMuteAll()／toggleFullscreen()</text>
+  <text x="545" y="444" class="boxdesc">expandVideo()</text>
+  <text x="545" y="460" class="boxdesc">handleKeydown()（M／F／ESC）</text>
+
+  <rect x="785" y="400" width="255" height="86" rx="9" class="card" />
+  <text x="800" y="426" class="boxlabel" font-size="13">triggerFireworks()</text>
+  <text x="800" y="444" class="boxdesc">新年時刻煙火粒子動畫</text>
+  <text x="800" y="460" class="boxdesc">（CSS keyframes 動態插入）</text>
+  <path d="M540,486 L540,508" class="arrow" />
+
+  <!-- Layer 4 -->
+  <text x="40" y="538" class="sectiontitle">04 · 瀏覽器原生 API（無後端／無資料庫）</text>
+  <rect x="40" y="548" width="235" height="60" rx="9" class="card" />
+  <text x="55" y="574" class="boxlabel" font-size="13">Fullscreen API</text>
+  <text x="55" y="592" class="boxdesc">requestFullscreen/exitFullscreen</text>
+
+  <rect x="285" y="548" width="235" height="60" rx="9" class="card" />
+  <text x="300" y="574" class="boxlabel" font-size="13">setInterval 計時器</text>
+  <text x="300" y="592" class="boxdesc">倒數／煙火節奏控制</text>
+
+  <rect x="530" y="548" width="245" height="60" rx="9" class="card" />
+  <text x="545" y="574" class="boxlabel" font-size="13">DOM Events</text>
+  <text x="545" y="592" class="boxdesc">click／keydown／fullscreenchange</text>
+
+  <rect x="785" y="548" width="255" height="60" rx="9" stroke-dasharray="4 3" class="card" />
+  <text x="800" y="574" class="boxdesc" font-style="italic">已確認：無 localStorage／</text>
+  <text x="800" y="592" class="boxdesc" font-style="italic">sessionStorage／fetch 呼叫</text>
+  <path d="M540,608 L540,630" class="arrow" />
+
+  <!-- Layer 5 -->
+  <text x="40" y="660" class="sectiontitle">05 · 外部依賴與資料來源</text>
+
+  <rect x="40" y="670" width="460" height="90" rx="9" class="card" />
+  <text x="60" y="698" class="boxlabel">YouTube iframe 內嵌播放</text>
+  <text x="60" y="718" class="boxdesc">youtube.com/embed/{videoId}</text>
+  <text x="60" y="736" class="boxdesc">非 YouTube Data API，不需 API 金鑰／配額</text>
+  <text x="60" y="752" class="boxdesc">（grep 確認：無硬編碼金鑰）</text>
+
+  <!-- Keystone -->
+  <rect x="520" y="662" width="520" height="106" rx="10" class="accent-soft accent-stroke" stroke-width="3" />
+  <text x="540" y="686" class="mono" font-size="12" letter-spacing="0.08em" fill="#2E4B8F">★ KEYSTONE — 最關鍵的設計決定</text>
+  <text x="540" y="708" class="boxlabel" font-size="14">videoUrls 陣列（app.js 第9~30行）</text>
+  <text x="540" y="726" class="boxdesc">20 個跨年直播網址，寫死於程式碼中；</text>
+  <text x="540" y="742" class="boxdesc">為年度人工維護資料，須每年跨年前</text>
+  <text x="540" y="758" class="boxdesc">由接手者手動替換為當年度直播網址</text>
+
+  <!-- connecting arrows layer3 -> layer4 -->
+  <path d="M157,486 L157,548" class="arrow" />
+  <path d="M402,486 L402,548" class="arrow" />
+  <path d="M652,486 L652,548" class="arrow" />
+  <path d="M912,486 L912,548" class="arrow" />
+
+  <!-- connecting arrows layer4 -> layer5 -->
+  <path d="M157,608 L157,670" class="arrow" />
+  <path d="M270,610 C270,635 400,635 400,662" class="arrow" />
+  <path d="M700,608 C700,635 700,650 750,662" class="arrow" />
+
+  <!-- footer note -->
+  <line x1="40" y1="790" x2="1040" y2="790" class="line" stroke-width="1" />
+  <text x="40" y="812" class="mono muted" font-size="11" letter-spacing="0.05em">內容依 2026-07-25 實際讀取 index.html / app.js / styles.css / HANDOFF.md 產出；查無之處已標「未確認」，未臆造。</text>
+  <text x="40" y="830" class="mono muted" font-size="11" letter-spacing="0.05em">本工具無 API 層／無基礎設施層／無 Worker 流水線——純靜態五層結構已誠實反映實際架構（無空層）。</text>
+
+</svg>

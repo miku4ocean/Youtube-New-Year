@@ -1,0 +1,49 @@
+%% Youtube-New-Year 架構圖
+%% 純靜態前端工具，無後端／無資料庫／無 Worker／無 API 金鑰
+%% 來源：實際讀取 index.html / app.js / styles.css / HANDOFF.md（2026-07-25）
+flowchart TB
+
+    subgraph L1["1. 使用者／瀏覽器"]
+        U["使用者開啟 index.html<br/>（單頁，桌機／平板／手機 RWD）"]
+    end
+
+    subgraph L2["2. UI 骨架層"]
+        HTML["index.html<br/>工具列／影片格線／放大覆蓋層／Toast容器／煙火容器"]
+        CSS["styles.css<br/>深色跨年主題、RWD Grid（4/3/2/1欄）"]
+    end
+
+    subgraph L3["3. 應用邏輯層（app.js：class NewYearLivestreams）"]
+        RENDER["renderVideoGrid()<br/>extractVideoId() / getEmbedUrl()"]
+        COUNT["startCountdown()<br/>距離下一年 1/1 00:00 倒數"]
+        CTRL["toggleMuteAll() / toggleFullscreen()<br/>expandVideo() / handleKeydown()"]
+        FW["triggerFireworks()<br/>新年時刻煙火粒子動畫"]
+    end
+
+    subgraph L4["4. 瀏覽器原生 API（無後端、無資料庫）"]
+        FS["Fullscreen API"]
+        TIMER["setInterval 計時器"]
+        DOM["DOM Events / keydown"]
+        NOTE4["未使用 localStorage／sessionStorage／fetch<br/>（已確認：程式碼內無相關呼叫）"]
+    end
+
+    subgraph L5["5. 外部依賴與資料來源"]
+        YT["YouTube iframe 內嵌播放<br/>youtube.com/embed/{id}<br/>非 YouTube Data API，不需 API 金鑰"]
+        KEYSTONE["★ KEYSTONE：videoUrls 陣列（app.js 第9~30行）<br/>20 個跨年直播網址，寫死於程式碼<br/>年度人工維護資料，需每年跨年前<br/>人工替換為當年度直播網址<br/>（HANDOFF.md：接手者下一步 #1）"]
+    end
+
+    U --> HTML
+    HTML --> CSS
+    HTML --> RENDER
+    RENDER --> KEYSTONE
+    KEYSTONE --> YT
+    RENDER --> YT
+    COUNT --> TIMER
+    CTRL --> FS
+    CTRL --> DOM
+    FW --> TIMER
+    RENDER --> DOM
+
+    classDef keystone fill:#EAEEF7,stroke:#2E4B8F,stroke-width:3px,color:#181B20;
+    classDef note fill:#FBFAF7,stroke:#E7E3DA,stroke-dasharray: 4 3,color:#6B7178;
+    class KEYSTONE keystone;
+    class NOTE4 note;
