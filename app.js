@@ -32,6 +32,8 @@ class NewYearLivestreams {
         this.videoCount = this.videoUrls.length;
         this.isMuted = true; // 預設靜音
         this.isFullscreen = false;
+        this.celebrationTriggered = false; // 防止 triggerFireworks() 每秒 tick 重複觸發
+        this.fireworksIntervalId = null; // 追蹤煙火 interval，供跨年慶祝視窗結束後清除
 
         this.init();
     }
@@ -231,6 +233,10 @@ class NewYearLivestreams {
                 return;
             }
 
+            // 不在慶祝視窗內（例如跨年第一小時已過，進入下一年度倒數）：
+            // 確保煙火 interval 已停止，並重置旗標供下次跨年使用
+            this.stopFireworks();
+
             const hours = Math.floor(diff / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
@@ -250,6 +256,11 @@ class NewYearLivestreams {
 
     // Fireworks effect
     triggerFireworks() {
+        // 每秒的 updateCountdown tick 在慶祝視窗內都會呼叫這裡，用旗標確保只真正啟動一次，
+        // 避免無限堆積永不清除的 setInterval（R2 驗證發現：20 秒內堆積 19 個 interval）
+        if (this.celebrationTriggered) return;
+        this.celebrationTriggered = true;
+
         const colors = ['#ffd700', '#ff4757', '#00d4ff', '#ff6b81', '#ffffff'];
 
         const createFirework = () => {
@@ -285,11 +296,20 @@ class NewYearLivestreams {
         }
 
         // Continue fireworks for celebration
-        setInterval(() => {
+        this.fireworksIntervalId = setInterval(() => {
             if (Math.random() > 0.7) {
                 createFirework();
             }
         }, 500);
+    }
+
+    // 停止煙火 interval（跨年慶祝視窗結束後呼叫），並重置旗標讓下次跨年可再次觸發
+    stopFireworks() {
+        if (this.fireworksIntervalId) {
+            clearInterval(this.fireworksIntervalId);
+            this.fireworksIntervalId = null;
+        }
+        this.celebrationTriggered = false;
     }
 
     // Helpers
