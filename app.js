@@ -3,6 +3,88 @@
  * 同時觀看多個跨年直播頻道
  */
 
+// ── 可測純邏輯（不碰 DOM），供 test.mjs 用 node:vm 直接載入測試 ──
+const NYLCore = {
+    // URL Parsing：從各種 YouTube 網址格式或純 11 碼 ID 取出 videoId
+    extractVideoId(url) {
+        if (!url) return null;
+
+        const patterns = [
+            /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/live\/)([a-zA-Z0-9_-]{11})/,
+            /^([a-zA-Z0-9_-]{11})$/
+        ];
+
+        for (const pattern of patterns) {
+            const match = url.match(pattern);
+            if (match) return match[1];
+        }
+        return null;
+    },
+
+    // 依目前時間判斷倒數狀態
+    // phase: 'countdown'（平常倒數）｜'final10'（最後 10 秒特效）｜'celebrate'（新年第一小時內）
+    countdownState(now) {
+        const year = now.getFullYear();
+
+        // 新年第一個小時內：慶祝視窗
+        if (now.getMonth() === 0 && now.getDate() === 1 && now.getHours() < 1) {
+            return { phase: 'celebrate', targetYear: year, remainingMs: 0 };
+        }
+
+        const newYear = new Date(year + 1, 0, 1, 0, 0, 0);
+        const diff = newYear - now;
+
+        if (diff <= 0) {
+            // 安全網：理論上不會發生（newYear 必為未來），保留以防時鐘異常
+            return { phase: 'celebrate', targetYear: year + 1, remainingMs: 0 };
+        }
+
+        if (diff <= 10000) {
+            return { phase: 'final10', targetYear: year + 1, remainingMs: diff };
+        }
+
+        return { phase: 'countdown', targetYear: year + 1, remainingMs: diff };
+    },
+
+    // 把毫秒數格式化成倒數文字：超過 24 小時顯示「N 天 HH:MM:SS」，否則「HH:MM:SS」
+    formatCountdown(ms) {
+        const safeMs = ms > 0 ? ms : 0;
+        const totalSeconds = Math.floor(safeMs / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        const pad = (n) => n.toString().padStart(2, '0');
+
+        if (days > 0) {
+            return `${days} 天 ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        }
+        return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    },
+
+    // 判斷這個 keydown 事件是否該觸發快捷鍵（排除修飾鍵組合與輸入框中的按鍵）
+    shouldHandleShortcut(e) {
+        if (!e) return false;
+        if (e.metaKey || e.ctrlKey || e.altKey) return false;
+
+        const target = e.target;
+        if (target) {
+            if (typeof target.matches === 'function' &&
+                target.matches('input, textarea, [contenteditable="true"]')) {
+                return false;
+            }
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+if (typeof globalThis !== 'undefined') {
+    globalThis.NYLCore = NYLCore;
+}
+
 class NewYearLivestreams {
     constructor() {
         // 固定的 20 個跨年直播網址
@@ -81,18 +163,7 @@ class NewYearLivestreams {
 
     // URL Parsing
     extractVideoId(url) {
-        if (!url) return null;
-
-        const patterns = [
-            /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/live\/)([a-zA-Z0-9_-]{11})/,
-            /^([a-zA-Z0-9_-]{11})$/
-        ];
-
-        for (const pattern of patterns) {
-            const match = url.match(pattern);
-            if (match) return match[1];
-        }
-        return null;
+        return NYLCore.extractVideoId(url);
     }
 
     getEmbedUrl(videoId) {
@@ -120,8 +191,8 @@ class NewYearLivestreams {
                             <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
                         </svg>
                     </button>
-                    <iframe 
-                        src="${this.getEmbedUrl(videoId)}" 
+                    <iframe
+                        src="${this.getEmbedUrl(videoId)}"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowfullscreen
                         loading="lazy"
@@ -142,7 +213,7 @@ class NewYearLivestreams {
     // Expand Video
     expandVideo(videoId) {
         this.expandedVideo.innerHTML = `
-            <iframe 
+            <iframe
                 src="https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen
