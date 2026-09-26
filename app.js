@@ -280,24 +280,13 @@ class NewYearLivestreams {
     startCountdown() {
         const updateCountdown = () => {
             const now = new Date();
-            const newYear = new Date(now.getFullYear() + 1, 0, 1, 0, 0, 0);
+            const state = NYLCore.countdownState(now);
 
             if (this.countdownLabel) {
-                this.countdownLabel.textContent = `距離 ${newYear.getFullYear()}`;
+                this.countdownLabel.textContent = `距離 ${state.targetYear}`;
             }
 
-            // 如果已經過了今年的新年，計算到明年
-            if (now.getMonth() === 0 && now.getDate() === 1 && now.getHours() < 1) {
-                // 新年第一個小時內
-                this.countdownTime.textContent = '🎉 新年快樂！';
-                this.countdownDisplay.classList.add('celebration');
-                this.triggerFireworks();
-                return;
-            }
-
-            const diff = newYear - now;
-
-            if (diff <= 0) {
+            if (state.phase === 'celebrate') {
                 this.countdownTime.textContent = '🎉 新年快樂！';
                 this.countdownDisplay.classList.add('celebration');
                 this.triggerFireworks();
@@ -308,15 +297,13 @@ class NewYearLivestreams {
             // 確保煙火 interval 已停止，並重置旗標供下次跨年使用
             this.stopFireworks();
 
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            this.countdownTime.textContent = NYLCore.formatCountdown(state.remainingMs);
 
-            this.countdownTime.textContent =
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-            // 最後 10 秒倒數特效
-            if (diff <= 10000) {
+            if (state.phase === 'countdown') {
+                // 修正：跨年後 celebration class 從未被移除，導致數字持續閃動（celebrationPulse）
+                this.countdownDisplay.classList.remove('celebration');
+            } else if (state.phase === 'final10') {
+                // 最後 10 秒倒數特效
                 this.countdownDisplay.classList.add('celebration');
             }
         };
