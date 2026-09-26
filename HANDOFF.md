@@ -43,13 +43,34 @@
   查詢當年度台灣跨年直播清單，手動替換 app.js 開頭 `videoUrls` 陣列的 20 個網址。
   本環境無法取得即時直播清單，故未假造資料。
 
-## 下一步（接手的人從這裡開始）
-1. **12 月中**：在使用者本機（非沙盒 agent）跑 `YOUTUBE_API_KEY=xxx node scripts/check-channels.mjs`
-   確認現有 20 筆狀態，查當年度台灣跨年直播清單，更新 `channels.js` 的 20 個 `url`（`name` 可用
-   `--suggest-names` 印出的真實 `channelTitle` 填入，不要編造）
-2. 用瀏覽器實際開啟 index.html（或 `?ids=` 帶新清單先行測試），確認 20 支影片載入、倒數計時、
-   煙火特效、頻道名稱皆正常
-3. push 後 GitHub Pages 會自動重建，需提前約 1 週更新完成
+## 2026-09-26 這輪工作（WP7 文件同步，Haiku 4.5）
+同步 AGENTS.md、使用說明.md、本檔 HANDOFF.md；npm test 34 passed；複驗無 API key 洩漏、快捷鍵有修飾鍵判斷、靜音不再重載 iframe；git 乾淨與 origin/main 同步。
+
+## 跨年換網址流程（12 月中）
+
+接手者按以下步驟，在使用者本機（非沙盒環境）執行：
+
+1. **驗證當前清單狀態**：
+   ```bash
+   YOUTUBE_API_KEY=<key> node scripts/check-channels.mjs
+   ```
+   查看 20 個直播的狀態（live／upcoming／已結束）；多數會顯示「已結束」（正常，需換新）。
+
+2. **查詢當年度台灣跨年直播**：蒐集當年 12/31 23:00～2026/1/1 02:00 的台灣跨年直播清單，
+   取得 20 個直播的 YouTube 網址（或 ID）。
+
+3. **取得頻道真實名稱**：用 `--suggest-names` 選項印出 API 建議的頻道名稱：
+   ```bash
+   YOUTUBE_API_KEY=<key> node scripts/check-channels.mjs --suggest-names
+   ```
+   **絕不編造頻道名稱**，只用 API 返回的真實 `channelTitle`。
+
+4. **更新 `channels.js`**：編輯 `channels.js`，用新的 20 個網址與頻道名稱替換舊值。
+
+5. **本機驗證**：用瀏覽器開啟 `index.html`（或 `?ids=新ID1,新ID2,...` 先行測試），
+   確認 20 支影片載入、倒數計時、煙火特效、頻道名稱皆正常。
+
+6. **部署**：push 至 GitHub；Pages 會自動重建。**需提前約 1 週完成**，以防部署延遲。
 
 ## 地雷（別踩）
 - 20 個 YouTube 直播 ID 目前仍是 2025 跨年時的舊值（2026-09-26 本次也還沒換，見下方待更新資料項），
