@@ -278,13 +278,19 @@ class NewYearLivestreams {
             if (this.expandedOverlay.classList.contains('active')) {
                 this.closeExpandedVideo();
             }
+            return;
         }
 
-        if (e.key === 'f' && !e.target.matches('input, textarea')) {
+        // 真 bug：原本只檢查 e.key==='f'/'m'，Cmd+F／Ctrl+F 搜尋頁面、Cmd+M 也會被誤觸；
+        // 大寫 F／M（開著 CapsLock）反而沒有反應。改用 shouldHandleShortcut 排除修飾鍵組合與
+        // input／textarea／contenteditable，並用 toLowerCase() 讓大小寫都能觸發。
+        if (!NYLCore.shouldHandleShortcut(e)) return;
+
+        const key = e.key.toLowerCase();
+
+        if (key === 'f') {
             this.toggleFullscreen();
-        }
-
-        if (e.key === 'm' && !e.target.matches('input, textarea')) {
+        } else if (key === 'm') {
             this.toggleMuteAll();
         }
     }
