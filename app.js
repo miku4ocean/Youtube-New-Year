@@ -87,31 +87,10 @@ if (typeof globalThis !== 'undefined') {
 
 class NewYearLivestreams {
     constructor() {
-        // 固定的 20 個跨年直播網址
-        this.videoUrls = [
-            'https://www.youtube.com/watch?v=6Ekqt2eQWaM',
-            'https://www.youtube.com/watch?v=INUlQU4XH7E',
-            'https://www.youtube.com/watch?v=qfqPudgn-8A',
-            'https://www.youtube.com/watch?v=fO69UoXVgUU',
-            'https://www.youtube.com/watch?v=0TWaHr8zmBc',
-            'https://www.youtube.com/watch?v=iwbYPtvjzzM',
-            'https://www.youtube.com/watch?v=YuF_KbM01T4',
-            'https://www.youtube.com/watch?v=qK1pilx16WA',
-            'https://www.youtube.com/watch?v=Fua-K7Yjydw',
-            'https://www.youtube.com/watch?v=QFdchnomk7o',
-            'https://www.youtube.com/watch?v=_ePcCXyHDAk',
-            'https://www.youtube.com/watch?v=LvebymzFc2I',
-            'https://www.youtube.com/watch?v=6nV37uSsx1o',
-            'https://www.youtube.com/watch?v=Ys76Vb8Bn1E',
-            'https://www.youtube.com/watch?v=VnZ6x6m5VAc',
-            'https://www.youtube.com/watch?v=DwNoUIspeHg',
-            'https://www.youtube.com/watch?v=pg1pjLGN1us',
-            'https://www.youtube.com/watch?v=9dGtcu2VKOQ',
-            'https://www.youtube.com/watch?v=sKY2i69cenc',
-            'https://www.youtube.com/watch?v=dE_A83eNQ7A'
-        ];
+        // 頻道清單：優先順序 ?ids= 網址參數 > channels.js 的 window.NYL_CHANNELS > 空陣列
+        this.channels = this.resolveChannels();
 
-        this.videoCount = this.videoUrls.length;
+        this.videoCount = this.channels.length;
         this.isMuted = true; // 預設靜音
         this.isFullscreen = false;
         this.celebrationTriggered = false; // 防止 triggerFireworks() 每秒 tick 重複觸發
@@ -120,12 +99,38 @@ class NewYearLivestreams {
         this.init();
     }
 
+    // 解析頻道清單
+    resolveChannels() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const idsParam = params.get('ids');
+            if (idsParam) {
+                const ids = idsParam.split(',').map(s => s.trim()).filter(Boolean);
+                if (ids.length > 0) {
+                    return ids.map((id, i) => ({ name: `直播 ${i + 1}`, url: id }));
+                }
+            }
+        } catch (e) {
+            // location/URLSearchParams 不可用時忽略，繼續走 channels.js
+        }
+
+        if (typeof window !== 'undefined' && Array.isArray(window.NYL_CHANNELS) && window.NYL_CHANNELS.length > 0) {
+            return window.NYL_CHANNELS;
+        }
+
+        return [];
+    }
+
     init() {
         this.cacheElements();
         this.bindEvents();
         this.renderVideoGrid();
         this.updateLoadedCount();
         this.startCountdown();
+
+        if (this.channels.length === 0) {
+            this.showToast('找不到頻道清單，請確認 channels.js 或 ?ids= 參數', 'error');
+        }
     }
 
     cacheElements() {
@@ -177,11 +182,12 @@ class NewYearLivestreams {
         this.videoGrid.className = 'video-grid';
 
         for (let i = 0; i < this.videoCount; i++) {
+            const channel = this.channels[i];
             const cell = document.createElement('div');
             cell.className = 'video-cell';
             cell.dataset.index = i;
 
-            const videoId = this.extractVideoId(this.videoUrls[i]);
+            const videoId = this.extractVideoId(channel.url);
 
             if (videoId) {
                 cell.innerHTML = `
@@ -198,6 +204,12 @@ class NewYearLivestreams {
                         loading="lazy"
                     ></iframe>
                 `;
+
+                // 頻道名稱用 textContent 設定，不拼進 innerHTML，避免 XSS
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'video-name';
+                nameSpan.textContent = channel.name || `直播 ${i + 1}`;
+                cell.appendChild(nameSpan);
 
                 cell.querySelector('.expand-btn').addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -391,7 +403,7 @@ class NewYearLivestreams {
 
     // Helpers
     updateLoadedCount() {
-        const count = this.videoUrls.filter(url => this.extractVideoId(url)).length;
+        const count = this.channels.filter(channel => this.extractVideoId(channel.url)).length;
         this.loadedCount.textContent = count;
     }
 

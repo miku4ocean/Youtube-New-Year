@@ -114,5 +114,39 @@ test('toggleMuteAll 有使用 postMessage', () => {
     assert(appCode.includes('postMessage'), '未改用 postMessage 控制靜音');
 });
 
+// ── WP5：頻道設定外部化到 channels.js ──
+test('app.js 內不再有硬編碼的 youtube.com/watch 網址', () => {
+    const count = (appCode.match(/youtube\.com\/watch/g) || []).length;
+    assert(count === 0, `仍有 ${count} 筆硬編碼網址`);
+});
+
+const channelsCode = readFileSync('channels.js', 'utf8');
+const channelsContext = vm.createContext({ window: {}, console });
+vm.runInContext(channelsCode, channelsContext, { filename: 'channels.js' });
+const NYL_CHANNELS = channelsContext.window.NYL_CHANNELS;
+
+test('channels.js 可被 vm 載入且 NYL_CHANNELS 存在', () => {
+    assert(Array.isArray(NYL_CHANNELS), 'window.NYL_CHANNELS 不是陣列');
+});
+test('NYL_CHANNELS 有 20 筆', () => {
+    assert(NYL_CHANNELS.length === 20, `實際 ${NYL_CHANNELS.length} 筆`);
+});
+test('NYL_CHANNELS 每筆 extractVideoId 都不為 null', () => {
+    const bad = NYL_CHANNELS.filter(ch => !NYLCore.extractVideoId(ch.url));
+    assert(bad.length === 0, `有 ${bad.length} 筆無法解析出 videoId`);
+});
+test('NYL_CHANNELS 每筆都有非空 name', () => {
+    const bad = NYL_CHANNELS.filter(ch => !ch.name || typeof ch.name !== 'string');
+    assert(bad.length === 0, `有 ${bad.length} 筆缺少 name`);
+});
+
+// index.html 有引入 channels.js
+test('index.html 有引入 channels.js（在 app.js 之前）', () => {
+    const channelsIdx = html.indexOf('channels.js');
+    const appIdx = html.indexOf('app.js');
+    assert(channelsIdx !== -1, 'index.html 未引入 channels.js');
+    assert(channelsIdx < appIdx, 'channels.js 應在 app.js 之前載入');
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail > 0 ? 1 : 0);
