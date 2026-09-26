@@ -106,5 +106,13 @@ test('shouldHandleShortcut: target 是 input → false', () => {
     assert(NYLCore.shouldHandleShortcut({ key: 'm', target: { tagName: 'INPUT' } }) === false, 'input 中應忽略快捷鍵');
 });
 
+// ── WP3：靜音改用 postMessage，不再重新載入 iframe.src ──
+test('toggleMuteAll 不再直接以 "iframe.src = src" 重新載入', () => {
+    assert(!appCode.includes('iframe.src = src'), '仍殘留舊的 iframe.src = src 寫法');
+});
+test('toggleMuteAll 有使用 postMessage', () => {
+    assert(appCode.includes('postMessage'), '未改用 postMessage 控制靜音');
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail > 0 ? 1 : 0);

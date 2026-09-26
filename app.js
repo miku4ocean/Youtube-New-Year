@@ -236,9 +236,22 @@ class NewYearLivestreams {
 
         const iframes = this.videoGrid.querySelectorAll('iframe');
         iframes.forEach(iframe => {
-            const src = new URL(iframe.src);
-            src.searchParams.set('mute', this.isMuted ? '1' : '0');
-            iframe.src = src.toString();
+            // 優先用 IFrame API 的 postMessage 下指令，不重新載入 iframe（跨年當下按 m 才不會全部黑屏重連）
+            try {
+                iframe.contentWindow.postMessage(
+                    JSON.stringify({ event: 'command', func: this.isMuted ? 'mute' : 'unMute', args: [] }),
+                    'https://www.youtube.com'
+                );
+            } catch (err) {
+                // 只有 postMessage 丟例外時才退回舊做法（改 src 觸發重新載入）
+                try {
+                    const fallbackUrl = new URL(iframe.src);
+                    fallbackUrl.searchParams.set('mute', this.isMuted ? '1' : '0');
+                    iframe.src = fallbackUrl.toString();
+                } catch (fallbackErr) {
+                    // 無法解析 src，放棄這個 iframe
+                }
+            }
         });
 
         this.showToast(this.isMuted ? '已全部靜音' : '已取消靜音', 'info');
